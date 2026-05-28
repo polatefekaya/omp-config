@@ -53,13 +53,13 @@ log "Node.js $(node -v) — OK"
 
 if ! command -v omp &>/dev/null; then
   log "Installing oh-my-pi..."
-  npm install -g @oh-my-pi/coding-agent
+  npm install -g @oh-my-pi/pi-coding-agent
 else
   log "oh-my-pi already installed — skipping"
 fi
 
 log "Installing swarm extension..."
-npm install -g @oh-my-pi/swarm-extension
+PUPPETEER_SKIP_DOWNLOAD=true npm install -g @oh-my-pi/swarm-extension
 
 if [ -L "$OMP_DIR" ]; then
   warn "~/.omp symlink already exists — skipping"
