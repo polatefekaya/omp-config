@@ -13,15 +13,15 @@ function safeExec(cmd: string): string {
 }
 
 export default function(pi: any) {
-  pi.on('session_start', async (ctx: any) => {
+  pi.on('session_start', async (_event: any, _ctx: any) => {
     const branch = safeExec('git branch --show-current')
     if (!branch) return
 
     const dirty = safeExec('git status --short')
     const log = safeExec('git log --oneline -5')
-    const stash = safeExec('git stash list --count 2>/dev/null || git stash list | wc -l')
-    const remote = safeExec('git remote get-url origin 2>/dev/null')
-    const unpushed = safeExec('git log @{u}.. --oneline 2>/dev/null')
+    const stash = safeExec('git stash list | wc -l')
+    const remote = safeExec('git remote get-url origin')
+    const unpushed = safeExec('git log @{u}.. --oneline')
 
     const lines: string[] = [
       `## Git State`,
@@ -48,6 +48,6 @@ export default function(pi: any) {
       lines.push(`\nStashed changes: ${stash}`)
     }
 
-    ctx.session.appendSystemText(lines.join('\n'))
+    await pi.sendUserMessage(lines.join('\n'))
   })
 }

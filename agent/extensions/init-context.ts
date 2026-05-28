@@ -240,33 +240,36 @@ Output only the markdown content between the triple backticks. No explanation be
 }
 
 export default function(pi: any) {
-  pi.commands.register({
-    name: 'init-context',
-    description: 'Scan this repo and generate .omp/CONTEXT.md',
+ pi.registerCommand('init-context', {
+   description: 'Scan this repo and generate .omp/CONTEXT.md',
+    async handler(_args: any, ctx: any) {
+      try {
+        const cwd = process.cwd()
+        ctx.ui.setStatus?.('init-context', 'Scanning repository...')
 
-    async execute(ctx: any) {
-      const cwd = process.cwd()
-      ctx.ui.setStatus?.('Scanning repository...')
+        const data = await gatherRepoData(cwd)
+        const prompt = buildPrompt(cwd, data)
 
-      const data = await gatherRepoData(cwd)
-      const prompt = buildPrompt(cwd, data)
+        ctx.ui.setStatus?.('init-context', 'Generating CONTEXT.md...')
 
-      ctx.ui.setStatus?.('Generating CONTEXT.md...')
+        const ompDir = path.join(cwd, '.omp')
+        await fs.mkdir(ompDir, { recursive: true })
 
-      const ompDir = path.join(cwd, '.omp')
-      await fs.mkdir(ompDir, { recursive: true })
+        const contextPath = path.join(ompDir, 'CONTEXT.md')
+        const existing = await safeRead(contextPath)
 
-      const contextPath = path.join(ompDir, 'CONTEXT.md')
-      const existing = await safeRead(contextPath)
+        if (existing) {
+          const backupPath = path.join(ompDir, 'CONTEXT.md.bak')
+          await fs.writeFile(backupPath, existing)
+        }
 
-      if (existing) {
-        const backupPath = path.join(ompDir, 'CONTEXT.md.bak')
-        await fs.writeFile(backupPath, existing)
+        await fs.writeFile(contextPath, prompt)
+        await pi.sendUserMessage(prompt)
+
+        ctx.ui.setStatus?.('init-context', '')
+      } catch (err: any) {
+        ctx.ui.notify?.(`init-context failed: ${err.message}`, 'error')
       }
-
-      await ctx.session.queueMessage(prompt)
-
-      ctx.ui.setStatus?.('')
     },
-  })
+ })
 }

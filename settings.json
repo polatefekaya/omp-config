@@ -18,10 +18,11 @@
     "threshold": 0.75
   },
   "extensions": [
-    "@oh-my-pi/swarm-extension"
+    "@oh-my-pi/swarm-extension",
+    "@oh-my-pi/exa"
   ],
   "task": {
-    "maxConcurrent": 4,
+    "maxConcurrent": 5,
     "model": "deepseek-v4-flash"
   }
 }

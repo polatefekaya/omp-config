@@ -1,1 +1,11 @@
 .omp.env
+natives/*
+natives
+logs*
+logs/*
+agent/sessions*
+agent/sessions/*
+agent/terminal-sessions/*
+agent/terminal-sessions*
+gpu_cache.json
+agent/history*

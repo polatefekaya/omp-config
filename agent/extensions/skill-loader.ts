@@ -204,7 +204,7 @@ export default function(pi: any) {
   const loadedSkills = new Set<SkillFile>()
   let profile: ProjectProfile | null = null
 
-  pi.on('session_start', async (ctx: any) => {
+  pi.on('session_start', async (_event: any, ctx: any) => {
     profile = await detectProjectProfile(process.cwd())
 
     const baseSkills = getBaseSkills(profile)
@@ -219,30 +219,28 @@ export default function(pi: any) {
     }
 
     if (skillContents.length > 0) {
-      ctx.session.appendSystemText(skillContents.join('\n\n'))
+      await pi.sendUserMessage(skillContents.join('\n\n'))
     }
   })
 
-  pi.on('input', async (ctx: any, message: string) => {
-    if (!profile) return
-
-    const newSkills = getMessageSkills(message, profile, loadedSkills)
-    if (newSkills.length === 0) return
-
-    const skillContents: string[] = []
-    for (const skillFile of newSkills) {
-      const content = await readSkill(skillFile)
-      if (content) {
-        skillContents.push(`<skill name="${skillFile}">\n${content}\n</skill>`)
-        loadedSkills.add(skillFile)
-      }
-    }
-
-    if (skillContents.length > 0) {
-      ctx.session.appendSystemText(
+  pi.on('input', async (event: any, _ctx: any) => {
+    const message = typeof event === 'string' ? event : event?.message ?? event?.text ?? ''
+   if (!profile) return
+   const newSkills = getMessageSkills(message, profile, loadedSkills)
+   if (newSkills.length === 0) return
+   const skillContents: string[] = []
+   for (const skillFile of newSkills) {
+     const content = await readSkill(skillFile)
+     if (content) {
+       skillContents.push(`<skill name="${skillFile}">\n${content}\n</skill>`)
+       loadedSkills.add(skillFile)
+     }
+   }
+   if (skillContents.length > 0) {
+      await pi.sendUserMessage(
         `[Skills loaded for this message: ${newSkills.join(', ')}]\n\n` +
         skillContents.join('\n\n')
       )
-    }
-  })
+   }
+ })
 }

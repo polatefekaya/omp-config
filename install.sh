@@ -53,7 +53,7 @@ log "Node.js $(node -v) — OK"
 
 if ! command -v omp &>/dev/null; then
   log "Installing oh-my-pi..."
-  npm install -g @oh-my-pi/pi-coding-agent
+  curl -fsSL https://omp.sh/install | sh
 else
   log "oh-my-pi already installed — skipping"
 fi
@@ -76,7 +76,7 @@ fi
 log "Creating directory structure..."
 mkdir -p "$DOTFILES_DIR/skills"
 mkdir -p "$DOTFILES_DIR/agent/skills"
-mkdir -p "$DOTFILES_DIR/extensions"
+mkdir -p "$DOTFILES_DIR/agent/extensions"
 
 detect_shell_rc() {
   if [ "$OS" = "Darwin" ]; then

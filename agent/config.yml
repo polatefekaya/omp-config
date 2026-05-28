@@ -1,0 +1,19 @@
+lastChangelogVersion: 15.5.10
+modelRoles: 
+  default: deepseek/deepseek-v4-pro:xhigh
+  smol: deepseek/deepseek-v4-flash:xhigh
+display: 
+  showTokenUsage: true
+  shimmer: kitt
+task: 
+  showResolvedModelBadge: true
+statusLine: 
+  separator: pipe
+  preset: full
+theme: 
+  dark: titanium
+memory: 
+  backend: local
+providers: 
+  webSearch: exa
+  image: auto
