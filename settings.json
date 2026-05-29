@@ -19,7 +19,7 @@
   },
   "extensions": [
     "@oh-my-pi/swarm-extension",
-    "@oh-my-pi/exa"
+    "@the-agency/pi-hashline-edit"
   ],
   "task": {
     "maxConcurrent": 5,

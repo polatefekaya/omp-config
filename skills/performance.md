@@ -95,10 +95,11 @@ IReadOnlyList page = await _db.Orders
     .ToListAsync(ct);
 ```
 
+* **PostgreSQL OR Clause Indexing Note:** Complex `OR` clauses in `.Where(...)` can bypass index optimizations under certain database planner conditions. Ensure there is a composite index on `(created_at DESC, id DESC)` in the database to support this query pattern.
+
 Use offset pagination only for admin UIs with small, bounded datasets
 where users jump to arbitrary pages. For API endpoints consumed by
 frontend or mobile: keyset pagination.
-
 ---
 
 ### Avoid Loading What You Do Not Need
@@ -223,6 +224,7 @@ Keep as `IEnumerable<T>` when:
 - You are building a query and not yet executing it
 - You are passing to another LINQ operator
 
+* **Allocation Alert (Collection Expressions & IEnumerable):** Avoid passing C# collection expressions (e.g. `[1, 2, 3]`) directly to parameters of type `IEnumerable<T>` on high-throughput paths. This forces the compiler to allocate a compiler-generated iterator/wrapper. Use `ReadOnlySpan<T>` or explicit arrays (`T[]`) for non-persisted parameters to avoid unnecessary allocator pressure.
 #### Avoid String Concatenation in Loops
 ```csharp
 // Wrong — O(n²) allocations

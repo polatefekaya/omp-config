@@ -154,10 +154,12 @@ builder.Services.AddDbContext(options =>
         npgsql => npgsql.MapEnum()));
 ```
 
+* **Naming Conventions Alignment:** `UseSnakeCaseNamingConvention()` translates C# enum values to snake_case when saving to string-based columns. When mapping native PostgreSQL enums via `.MapEnum()`, ensure the database-level enum values match exactly (snake_case vs CamelCase) to avoid Npgsql runtime casting failures.
+* **DbContext Pooling Compatibility:** If the service uses DbContext Pooling (`AddDbContextPool<T>`), connection configurations are cached. Native PostgreSQL enums must be registered on the `NpgsqlDataSource` / `NpgsqlDataSourceBuilder` before the DbContext is registered rather than inline in options.
+
 Only use PostgreSQL enums if they are already used in the project.
 Do not introduce them for new fields — check with the team first,
 as adding values requires a migration and database-level change.
-
 #### PostgreSQL Arrays
 ```csharp
 // Entity property

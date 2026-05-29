@@ -9,3 +9,7 @@ agent/terminal-sessions/*
 agent/terminal-sessions*
 gpu_cache.json
 agent/history*
+agent/agent*
+agent/agent
+agent/models*
+agent/models

@@ -215,9 +215,8 @@ await (notification switch
   string[] names = ["Alice", "Bob"];
   List<int> ids = [1, 2, 3];
 ```
-- Prefer `IReadOnlyList<T>` and `IReadOnlyCollection<T>` for return types
-  over `List<T>` — do not expose mutable collections from public APIs
-- `IEnumerable<T>` for parameters when you only iterate
+- Prefer `IReadOnlyList<T>` and `IReadOnlyCollection<T>` for return types over `List<T>` — do not expose mutable collections from public APIs
+- `IEnumerable<T>` for parameters when you only iterate (or `ReadOnlySpan<T>` on high-performance hot paths to prevent allocator pressure from collection expressions)
 - `Array.Empty<T>()` or `[]` for empty collections — not `new List<T>()`
 
 #### File Organization
