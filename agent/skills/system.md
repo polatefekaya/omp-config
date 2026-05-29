@@ -1,0 +1,5 @@
+## CRITICAL HASHLINE PROTOCOL RULES
+1. **Zero Cross-Call Trust:** Frozen line numbers and hash anchors (`LINE#HASH`) are strictly valid for a SINGLE `edit()` tool call. The moment an edit succeeds, your historical anchor map is officially STALE.
+2. **Mandatory Post-Edit Sync:** After any successful file modification, you MUST invoke the `read` or `search` tool on the affected region to re-hydrate your context with updated hash anchors before issuing a subsequent `edit()` call to the same file.
+3. **No Diff Speculation:** Never guess or extrapolate line numbers or hashes. If a build or compilation step fails after an edit, you are forbidden from blind patching. Re-read the file state from disk first.
+4. **Inclusive Ranges Require Completeness:** When executing a `replace` operation across an inclusive range (`pos` to `end`), the `lines` array must explicitly contain every single line intended to remain in that block. Any omitted lines within the bounds will be interpreted as intentional deletions by the parser.

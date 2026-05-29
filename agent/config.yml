@@ -15,5 +15,10 @@ theme:
 memory: 
   backend: local
 providers: 
-  webSearch: exa
+  webSearch: searxng
   image: auto
+exa: 
+  enabled: false
+  enableSearch: false
+searxng: 
+  endpoint: https://search.polatefekaya.com
